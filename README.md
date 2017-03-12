@@ -23,13 +23,14 @@ The script will:
 ## Usage
   ./irsa-image-downloader.sh __path/to/list/file__ __[size]__
   
-  #### size
+  ### size
+  
   used to cut out the original fits image.
   
-  ##### From http://irsa.ipac.caltech.edu/ibe/cutouts.html
+  #### From http://irsa.ipac.caltech.edu/ibe/cutouts.html
   The size parameter consists of one or two (comma separated) values followed by an optional units specification. Units can be pixels (px, pix, pixels) or angular (arcsec, arcmin, deg, rad); the default is degrees. The first size value (x) is taken to be the full-width of the desired cutout along the first image axis (NAXIS1), and the second (y) is taken to be the full-height along the second axis (NAXIS2). If only one size value is specified, it is used as both the full-width and full-height. Negative sizes are illegal. (from )
   
- ##### If size is not specify, the fits image will not be cutted
+__If size is not specify, the fits image will not be cutted__
 
   Examples:
 
