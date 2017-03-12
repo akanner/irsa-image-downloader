@@ -70,6 +70,6 @@ This script was made for my personal usage, and "as it is" is enough for me, but
 
 * build a better parameter interface.
 * Add a new parameter to specify the output folder and the output file's name.
-* Add the possibility to choose different palletes (through new parameters).
+* Add the possibility to choose different palettes (through new parameters).
 * Add the possibility to generate RGB images
 	* To do this, it may be needed to add a new band (to use one band per color)
