@@ -5,8 +5,38 @@ FITS_SIZE="$2";
 #sets ";" as the field separator
 export IFS=";";
 
+# Draws a circle inside a jpeg image using the given xy coordinates
+# $1 string path to the jpeg file
+# $2 string ra-coord of the circle's center
+# $3 string dec-coord of the circle's center
+drawCircleInJpeg (){
+	JPEG_NAME=$1;
+	RA=$2;
+	DEC=$3;
 
+	#creates a region (circle) around the targeted object and saves it
+	# ds9 can't save a jpg with regions on it (it will save the plain jpg discarding all the regions)
+	# we create a file that contains the coordinates (in pixels) x y to draw the circle with another tool
+	#
+	#-regions command "FK5;circle(${RA}d,${DEC}d,0.01d)#color=red" draws a circle around the targeted object
+	#-regions format xy Sets coordinates system to xy
+	# -regions system image sets coordinates units to pixels
 
+	REGION_FILE="${JPEG_NAME}.reg";
+	ds9 fits/$FITS_NAME  -regions command "FK5;circle(${RA}d,${DEC}d,0.01d)" -regions format xy -regions system image -regions save $REGION_FILE -exit
+	#gets the circle center coords inside the image
+	CIRCLE_CENTER=$(cat $REGION_FILE | sed 's/^ *//;s/ *$//'); #trim
+	#ensures that the IFS is ' \t\n'
+	local OLD_IFS=$IFS
+	IFS=$' \t\n' 
+	CIRCLE_COORDS=($CIRCLE_CENTER);
+	#restores the old IFS
+	IFS=$_OLD_IFS
+	#adds the circle
+	python circle_plotter.py "${ACTUAL_FOLDER}/jpg/${JPEG_NAME}" ${CIRCLE_COORDS[0]} ${CIRCLE_COORDS[1]}
+	#deletes the region file
+	rm $REGION_FILE;
+}
 
 #Creates the folder "fits"
 $(mkdir -p fits)
@@ -71,17 +101,20 @@ while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 		#----------------------------------------------------
 		# scale mode changes the scale of the pixels's intensity
 		# cmap Cool applies a blue based colour palette
-		# -regions command "FK5;circle(${RA}d,${DEC}d,0.01d)#color=red" draws a circle around the targeted object
+
 		# export jpeg  XX saves the image as JPEG conserving XX% of the original quality of the fits image 
 		# exit exits ds9
 		
-		for cmap in Cool Hsv Rainbow; do
+		for cmap in Cool Hsv Heat; do
 		  JPEG_NAME="${NAME}-${RESOURCE_NAME}-${cmap}-${JPEG_SCALE_DISTRIBUTION}-${JPEG_SCALE_MODE}.jpg";
 		  #fits to jpeg transformation
 		  #stores IFS (;) so that ";" can be printed in the ds9 command
 		  OLD_IFS=$IFS;
 		  IFS="@";
-	  	  ds9 fits/$FITS_NAME -scale $JPEG_SCALE_DISTRIBUTION -scale mode $JPEG_SCALE_MODE -zoom to fit -cmap $cmap -regions command "FK5;circle(${RA}d,${DEC}d,0.01d)#color=red" -export jpeg jpg/$JPEG_NAME 75 -exit;
+		  #converts fits to JPEG
+	  	  ds9 fits/$FITS_NAME -scale $JPEG_SCALE_DISTRIBUTION -scale mode $JPEG_SCALE_MODE -zoom to fit -cmap $cmap -export jpeg jpg/$JPEG_NAME 100 -exit;
+	  	  #adds a circle around the targeted object
+	  	  drawCircleInJpeg $JPEG_NAME $RA $DEC
 	  	  #restores IFS
 	  	  IFS=$OLD_IFS;
 		  #writes output
