@@ -14,7 +14,7 @@ $(mkdir -p fits)
 $(mkdir -p jpg)
 #writes header output
 echo "name;coords;band;size;fits_path;palette;jpeg_path;scale_distribution;scale_mode" > output.csv;
-while read NAME RA DEC; do #reads from a file specified by CSV_PATH
+while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 	echo "------------------------------------"
 	echo "Getting coadd's metadata...";
 	#---------------------------------------------------------------
@@ -25,7 +25,11 @@ while read NAME RA DEC; do #reads from a file specified by CSV_PATH
 	# awk '{print $17}' gets the seventeenth column of the row returned by the previous awk
 	COADD_URL="http://irsa.ipac.caltech.edu/ibe/search/wise/allwise/p3am_cdd?POS=${RA},${DEC}"
 	COADD_ID=$(wget -q -O - "${COADD_URL}" |  awk 'FNR == 5 {print}' | awk '{print $17;}')
-
+	#IF defined JPG_SIZE will override the default jpg_size
+	if [[ ! -z $JPG_SIZE ]];
+	then	
+		FITS_SIZE=$JPG_SIZE;
+	fi
 	echo "coaddId = $COADD_ID";
 
 	COADD_GRP=${COADD_ID:0:2};
