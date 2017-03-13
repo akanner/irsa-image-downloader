@@ -11,13 +11,16 @@
 
 The script will:
 * Download the fits images for the coords given
-* Transform the fits image into 3 jpeg (using the Cool Hsv and Rainbow palettes from DS9)
+* Transform the fits image into 3 jpeg (using the Cool Hsv and Heat palettes from DS9)
+* Draw a circle around the targeted object in the jpg
 * generate a csv file with all the resulting files's information
  
  ## Requirements
  
 * wget (`apt-get install wget`) 
 * SAOImage DS9 (http://ds9.si.edu/site/Home.html)
+* Python
+* Pillow (image processing library for python) (`pip install Pillow`)
 * make sure that you have executing permission over the script and write permissions in the current folder
 
 ## Usage
