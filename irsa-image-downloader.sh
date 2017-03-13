@@ -56,9 +56,10 @@ while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 	COADD_URL="http://irsa.ipac.caltech.edu/ibe/search/wise/allwise/p3am_cdd?POS=${RA},${DEC}"
 	COADD_ID=$(wget -q -O - "${COADD_URL}" |  awk 'FNR == 5 {print}' | awk '{print $17;}')
 	#IF defined JPG_SIZE will override the default jpg_size
+	CUTOUT_SIZE=$FITS_SIZE;
 	if [[ ! -z $JPG_SIZE ]];
 	then	
-		FITS_SIZE=$JPG_SIZE;
+		CUTOUT_SIZE=$JPG_SIZE;
 	fi
 	echo "coaddId = $COADD_ID";
 
@@ -75,14 +76,14 @@ while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 		FITS_NAME="$RESOURCE_NAME.fits";
 		#sets the fits's size (the size of the actual area of the photo not the byte size)
 		REQUEST_PARAMATERS=""
-		OUTPUT_SIZE_VALUE="standard-nasa-size" #value of the output's fits size
-		if [[ $FITS_SIZE != "" && $FITS_SIZE != "0" ]];
+		OUTPUT_SIZE_VALUE="7200arcsec" #value of the output's fits size
+		if [[ $CUTOUT_SIZE != "" && $CUTOUT_SIZE != "0" ]];
                   then  
                     #-----------------------------------------------------------
                     # Used to do cutouts to the original fits file
                     #-----------------------------------------------------------
-                    REQUEST_PARAMATERS="?center=${RA},${DEC}&size=${FITS_SIZE}"
-                    OUTPUT_SIZE_VALUE="${FITS_SIZE}"
+                    REQUEST_PARAMATERS="?center=${RA},${DEC}&size=${CUTOUT_SIZE}"
+                    OUTPUT_SIZE_VALUE="${CUTOUT_SIZE}"
                 fi
 		#-----------------------------------------------------------
 		# Fits's URL 
