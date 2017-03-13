@@ -66,7 +66,7 @@ another_object;30;20
 
 ##### TODO
 
-This script was made for my personal usage, and "as it is" is enough for me, but here are some ideas to make it better:
+Here are some ideas:
 
 * build a better parameter interface.
 * Add a new parameter to specify the output folder and the output file's name.
