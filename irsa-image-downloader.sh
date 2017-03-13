@@ -71,13 +71,19 @@ while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 		#----------------------------------------------------
 		# scale mode changes the scale of the pixels's intensity
 		# cmap Cool applies a blue based colour palette
+		# -regions command "FK5;circle(${RA}d,${DEC}d,0.01d)#color=red" draws a circle around the targeted object
 		# export jpeg  XX saves the image as JPEG conserving XX% of the original quality of the fits image 
 		# exit exits ds9
 		
 		for cmap in Cool Hsv Rainbow; do
 		  JPEG_NAME="${NAME}-${RESOURCE_NAME}-${cmap}-${JPEG_SCALE_DISTRIBUTION}-${JPEG_SCALE_MODE}.jpg";
 		  #fits to jpeg transformation
-	  	  $(ds9 fits/$FITS_NAME -scale $JPEG_SCALE_DISTRIBUTION -scale mode $JPEG_SCALE_MODE -zoom to fit -cmap $cmap -export jpeg jpg/$JPEG_NAME 75 -exit);
+		  #stores IFS (;) so that ";" can be printed in the ds9 command
+		  OLD_IFS=$IFS;
+		  IFS="@";
+	  	  ds9 fits/$FITS_NAME -scale $JPEG_SCALE_DISTRIBUTION -scale mode $JPEG_SCALE_MODE -zoom to fit -cmap $cmap -regions command "FK5;circle(${RA}d,${DEC}d,0.01d)#color=red" -export jpeg jpg/$JPEG_NAME 75 -exit;
+	  	  #restores IFS
+	  	  IFS=$OLD_IFS;
 		  #writes output
 	  	  $(sed -i "$ a ${NAME};${RA},${DEC};$BAND;$OUTPUT_SIZE_VALUE;${ACTUAL_FOLDER}/${FITS_NAME};${cmap};${ACTUAL_FOLDER}/jpg/${JPEG_NAME};${JPEG_SCALE_DISTRIBUTION};${JPEG_SCALE_MODE}" output.csv);	
 		  echo "$FITS_NAME converted to $JPEG_NAME";
