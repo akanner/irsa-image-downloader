@@ -16,12 +16,14 @@ img_path = sys.argv[1]
 #coords
 x = float(sys.argv[2])
 y = float(sys.argv[3])
-r = 50
+
 
 image = Image.open(img_path);
 #In PIL y=0 is the TOP of the image
 #In DS9 y=0 is de bottom of the image
 y = image.height - y;
+#uses the width of the image to draw a circle with a radius of 15 % the width of the image
+r = image.width *15 / 100;
 draw = ImageDraw.Draw(image);
 draw.ellipse((x-r, y-r, x+r, y+r), outline=(255,0,0,0))
 
