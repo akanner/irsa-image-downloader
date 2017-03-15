@@ -253,7 +253,7 @@ while read NAME RA DEC JPG_SIZE; do #reads from a file specified by CSV_PATH
 	RGB_IMAGE_NAME="jpg/${NAME}-rgb.jpg";
 	createRGBImage "fits/${FITS_NAMES[0]}" "fits/${FITS_NAMES[1]}" "fits/${FITS_NAMES[2]}" $RGB_IMAGE_NAME $RA $DEC;
 	#writes to output
-	$(sed -i "$ a ${NAME};${RA},${DEC};;$OUTPUT_SIZE_VALUE;${FITS_NAMES[*]};RGB;${ACTUAL_FOLDER}/jpg/${JPEG_NAME};;" output.csv);
+	$(sed -i "$ a ${NAME};${RA},${DEC};;$OUTPUT_SIZE_VALUE;${FITS_NAMES[0]},${FITS_NAMES[1]},${FITS_NAMES[2]};RGB;${ACTUAL_FOLDER}/jpg/${JPEG_NAME};;" output.csv);
 	echo "${RGB_IMAGE_NAME} created...";
 	##############################################################################
 	#end of while  
