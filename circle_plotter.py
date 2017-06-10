@@ -43,7 +43,7 @@ y = float(sys.argv[3])
 
 image = Image.open(img_path);
 #In PIL y=0 is the TOP of the image
-#In DS9 y=0 is de bottom of the image
+#In DS9 y=0 is the bottom of the image
 y = image.height - y;
 #uses the width of the image to draw a circle with a radius of 15 % the width of the image
 r = image.width *10 / 100;
