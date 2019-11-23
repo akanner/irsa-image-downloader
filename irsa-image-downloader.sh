@@ -23,10 +23,11 @@ getCoaddId(){
 	#gets the id of the coadd containing the coordinate RA,DEC
 	#----------------------------------------------------------------
 	# wget makes a call through the IRSA's api to get the metadata of the coadd containing the coordinate RA,DEC (http://irsa.ipac.caltech.edu/ibe/queries.html)
+	# | grep -v '^\\' ignores comments (lines begining with \) from the response
 	# awk  'FNR == 5 {print}' filters the fifth row of the table returned by wget
 	# awk '{print $17}' gets the seventeenth column of the row returned by the previous awk
 	COADD_URL="http://irsa.ipac.caltech.edu/ibe/search/wise/allwise/p3am_cdd?POS=${RA},${DEC}"
-	COADD_ID=$(wget -q -O - "${COADD_URL}" |  awk 'FNR == 5 {print}' | awk '{print $17;}')
+	COADD_ID=$(wget -q -O - "${COADD_URL}" | grep -v '^\\' | awk 'FNR == 5 {print}' | awk '{print $17;}')
 
 	echo $COADD_ID
 }
@@ -98,7 +99,7 @@ drawCircleInJpeg (){
 	#restores the old IFS
 	IFS=$OLD_IFS
 	#adds the circle
-	python circle_plotter.py "${ACTUAL_FOLDER}/${JPEG_NAME}" ${CIRCLE_COORDS[0]} ${CIRCLE_COORDS[1]}
+	python ./star_drawer.py "${ACTUAL_FOLDER}/${JPEG_NAME}" ${CIRCLE_COORDS[0]} ${CIRCLE_COORDS[1]}
 	#deletes the region file
 	rm $REGION_FILE;
 }
