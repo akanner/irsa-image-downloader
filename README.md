@@ -12,7 +12,7 @@
 The script will:
 * Download the fits images for the coords given
 * Transform the fits image into 3 jpeg (using the Cool Hsv and Heat palettes from DS9)
-* Draw a circle around the targeted object in the jpg
+* Draw an image of a star around the targeted object in the jpg
 * generate a csv file with all the resulting files's information
  
  ## Requirements
